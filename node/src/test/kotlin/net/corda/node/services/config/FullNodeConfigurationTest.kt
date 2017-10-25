@@ -17,7 +17,6 @@ class FullNodeConfigurationTest {
         val testConfiguration = FullNodeConfiguration(
                 baseDirectory = Paths.get("."),
                 myLegalName = ALICE.name,
-                networkMapService = null,
                 emailAddress = "",
                 keyStorePassword = "cordacadevpass",
                 trustStorePassword = "trustpass",

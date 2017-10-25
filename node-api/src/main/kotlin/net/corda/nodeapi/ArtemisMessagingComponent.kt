@@ -1,6 +1,5 @@
 package net.corda.nodeapi
 
-import net.corda.core.identity.CordaX500Name
 import net.corda.core.identity.Party
 import net.corda.core.messaging.MessageRecipientGroup
 import net.corda.core.messaging.MessageRecipients
@@ -84,11 +83,8 @@ abstract class ArtemisMessagingComponent : SingletonSerializeAsToken() {
     abstract val config: SSLConfiguration?
 
     // Used for bridges creation.
-    fun getArtemisPeerAddress(party: Party, address: NetworkHostAndPort, netMapName: CordaX500Name? = null): ArtemisPeerAddress {
-        return if (party.name == netMapName) {
-            NetworkMapAddress(address)
-        } else {
-            NodeAddress.asSingleNode(party.owningKey, address) // It also takes care of services nodes treated as peer nodes
-        }
+    fun getArtemisPeerAddress(party: Party, address: NetworkHostAndPort): ArtemisPeerAddress {
+        return NodeAddress.asSingleNode(party.owningKey, address) // It also takes care of services nodes treated as peer nodes
+
     }
 }

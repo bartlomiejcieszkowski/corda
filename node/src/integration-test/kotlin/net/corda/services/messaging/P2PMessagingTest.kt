@@ -116,11 +116,10 @@ class P2PMessagingTest : NodeBasedTest() {
 
         // Restart the node and expect a response
         val aliceRestarted = startNode(ALICE.name, waitForConnection = false, configOverrides = mapOf("messageRedeliveryDelaySeconds" to 5)).getOrThrow()
-        //aliceRestarted.network.
         val response = aliceRestarted.network.onNext<Any>(dummyTopic, sessionId).getOrThrow(5.seconds)
 
         assertThat(crashingNodes.requestsReceived.get()).isGreaterThan(numberOfRequestsReceived)
-      //  assertThat(response).isEqualTo(responseMessage)
+        assertThat(response).isEqualTo(responseMessage)
     }
 
     data class CrashingNodes(

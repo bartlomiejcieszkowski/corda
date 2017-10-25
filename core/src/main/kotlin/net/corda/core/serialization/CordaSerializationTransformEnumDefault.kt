@@ -1,7 +1,7 @@
 package net.corda.core.serialization
 
 /**
- * This annotation is used to mark an enumerated type as having had a multiple members added, It acts
+ * This annotation is used to mark an enumerated type as having had multiple members added, It acts
  * as a container annotation for instances of [CordaSerializationTransformEnumDefault], each of which
  * details individual additions.
  *
@@ -40,7 +40,7 @@ annotation class CordaSerializationTransformEnumDefaults(vararg val value: Corda
 
 /**
  * This annotation is used to mark an enumerated type as having had a new constant appended to it. For
- * each additional constant added a new annotation should be appended to the class. Once more than one
+ * each additional constant added a new annotation should be appended to the class. If more than one
  * is required the wrapper annotation [CordaSerializationTransformEnumDefaults] should be used to
  * encapsulate them
  *

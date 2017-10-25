@@ -14,7 +14,7 @@ import java.util.*
  * Base class for representations of specific types of transforms as applied to a type within the
  * Corda serialisation framework
  */
-sealed class Transform : DescribedType {
+abstract class Transform : DescribedType {
     companion object : DescribedTypeConstructor<Transform> {
         val DESCRIPTOR = AMQPDescriptorRegistry.TRANSFORM_ELEMENT.amqpDescriptor
 
@@ -95,6 +95,8 @@ class EnumDefaultSchemeTransform(val old: String, val new: String) : Transform()
     override fun equals(other: Any?) = (
             (other is EnumDefaultSchemeTransform && other.new == new && other.old == old) || super.equals(other))
 
+    override fun hashCode() = (17 * new.hashCode()) + old.hashCode()
+
     override val name: String get() = typeName
 }
 
@@ -130,6 +132,8 @@ class RenameSchemaTransform(val from: String, val to: String) : Transform() {
 
     override fun equals(other: Any?) = (
             (other is RenameSchemaTransform && other.from == from && other.to == to) || super.equals(other))
+
+    override fun hashCode() = (11 * from.hashCode()) + to.hashCode()
 
     override val name: String get() = typeName
 }
@@ -205,7 +209,6 @@ data class TransformsSchema(val types: Map<String, EnumMap<TransformTypes, Mutab
          */
         override fun newInstance(described: Any?): TransformsSchema {
             val rtn = mutableMapOf<String, EnumMap<TransformTypes, MutableList<Transform>>>()
-
             val describedType = described as? DescribedType ?: return TransformsSchema(rtn)
 
             if (describedType.descriptor != DESCRIPTOR) {
@@ -214,7 +217,6 @@ data class TransformsSchema(val types: Map<String, EnumMap<TransformTypes, Mutab
 
             val map = describedType.described as? Map<*, *> ?:
                     throw NotSerializableException("Transform schema must be encoded as a map")
-
 
             map.forEach { type ->
                 val fingerprint = type.key as? String ?:

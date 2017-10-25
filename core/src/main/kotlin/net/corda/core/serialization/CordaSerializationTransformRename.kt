@@ -15,10 +15,14 @@ package net.corda.core.serialization
 @Retention(AnnotationRetention.RUNTIME)
 annotation class CordaSerializationTransformRenames(vararg val value: CordaSerializationTransformRename)
 
+// TODO When we have class renaming update the docs
 /**
- * This annotation is used to mark a class has having had an element renamed. It is used by the
+ * This annotation is used to mark a class has having had a property element. It is used by the
  * AMQP deserialiser to allow instances with different versions of the class on their Class Path
  * to successfully deserialize the object
+ *
+ * NOTE: Renaming of the class itself is not be done with this annotation. For class renaming
+ * see ???
  *
  * @property to [String] representation of the properties new name
  * @property from [String] representation of the properties old new

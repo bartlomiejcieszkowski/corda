@@ -189,7 +189,6 @@ public class JavaSerializationOutputTests {
         decoder.register(Transform.Companion.getDESCRIPTOR(), Transform.Companion);
         decoder.register(TransformsSchema.Companion.getDESCRIPTOR(), TransformsSchema.Companion);
 
-
         new EncoderImpl(decoder);
         decoder.setByteBuffer(ByteBuffer.wrap(bytes.getBytes(), 8, bytes.getSize() - 8));
         Envelope result = (Envelope) decoder.readObject();

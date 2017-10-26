@@ -1,6 +1,5 @@
 package net.corda.nodeapi
 
-import net.corda.core.identity.Party
 import net.corda.core.messaging.MessageRecipientGroup
 import net.corda.core.messaging.MessageRecipients
 import net.corda.core.messaging.SingleMessageRecipient
@@ -41,11 +40,6 @@ abstract class ArtemisMessagingComponent : SingletonSerializeAsToken() {
         val hostAndPort: NetworkHostAndPort
     }
 
-    @CordaSerializable
-    data class NetworkMapAddress(override val hostAndPort: NetworkHostAndPort) : ArtemisPeerAddress {
-        override val queueName: String get() = NETWORK_MAP_QUEUE
-    }
-
     /**
      * This is the class used to implement [SingleMessageRecipient], for now. Note that in future this class
      * may change or evolve and code that relies upon it being a simple host/port may not function correctly.
@@ -59,12 +53,10 @@ abstract class ArtemisMessagingComponent : SingletonSerializeAsToken() {
      */
     @CordaSerializable
     data class NodeAddress(override val queueName: String, override val hostAndPort: NetworkHostAndPort) : ArtemisPeerAddress {
-        companion object {
-            fun asSingleNode(peerIdentity: PublicKey, hostAndPort: NetworkHostAndPort): NodeAddress {
-                return NodeAddress("$PEERS_PREFIX${peerIdentity.toBase58String()}", hostAndPort)
-            }
-        }
+        constructor(peerIdentity: PublicKey, hostAndPort: NetworkHostAndPort) :
+                this("$PEERS_PREFIX${peerIdentity.toBase58String()}", hostAndPort)
     }
+
 
     /**
      * [ServiceAddress] implements [MessageRecipientGroup]. It holds a queue associated with a service advertised by
@@ -81,10 +73,4 @@ abstract class ArtemisMessagingComponent : SingletonSerializeAsToken() {
 
     /** The config object is used to pass in the passwords for the certificate KeyStore and TrustStore */
     abstract val config: SSLConfiguration?
-
-    // Used for bridges creation.
-    fun getArtemisPeerAddress(party: Party, address: NetworkHostAndPort): ArtemisPeerAddress {
-        return NodeAddress.asSingleNode(party.owningKey, address) // It also takes care of services nodes treated as peer nodes
-
-    }
 }

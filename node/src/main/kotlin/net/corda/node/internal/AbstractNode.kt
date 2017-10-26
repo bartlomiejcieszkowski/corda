@@ -136,7 +136,6 @@ abstract class AbstractNode(config: NodeConfiguration,
     protected lateinit var smm: StateMachineManager
     private lateinit var tokenizableServices: List<Any>
     protected lateinit var attachments: NodeAttachmentService
-    protected lateinit var inNodeNetworkMapService: NetworkMapService
     protected lateinit var network: MessagingService
     protected val runOnStop = ArrayList<() -> Any?>()
     protected lateinit var database: CordaPersistence
@@ -485,7 +484,7 @@ abstract class AbstractNode(config: NodeConfiguration,
                 services.auditService, services.monitoringService, networkMapCache, services.schemaService,
                 services.transactionVerifierService, services.validatedTransactions, services.contractUpgradeService,
                 services, cordappProvider, this)
-        makeNetworkServices(network, networkMapCache, tokenizableServices)
+        makeNetworkServices(tokenizableServices)
         return tokenizableServices
     }
 
@@ -546,12 +545,7 @@ abstract class AbstractNode(config: NodeConfiguration,
         }
     }
 
-    private fun setupInNodeNetworkMapService(networkMapCache: NetworkMapCacheInternal) {
-        inNodeNetworkMapService = NullNetworkMapService
-    }
-
-    private fun makeNetworkServices(network: MessagingService, networkMapCache: NetworkMapCacheInternal, tokenizableServices: MutableList<Any>) {
-        setupInNodeNetworkMapService(networkMapCache)
+    private fun makeNetworkServices(tokenizableServices: MutableList<Any>) {
         configuration.notary?.let {
             val notaryService = makeCoreNotaryService(it)
             tokenizableServices.add(notaryService)

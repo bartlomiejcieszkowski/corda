@@ -171,10 +171,7 @@ class NodeMessagingClient(override val config: NodeConfiguration,
     /** An executor for sending messages */
     private val messagingExecutor = AffinityExecutor.ServiceAffinityExecutor("Messaging", 1)
 
-    /**
-     * Apart from the NetworkMapService this is the only other address accessible to the node outside of lookups against the NetworkMapCache.
-     */
-    override val myAddress: SingleMessageRecipient = NodeAddress.asSingleNode(myIdentity, advertisedAddress)
+    override val myAddress: SingleMessageRecipient = NodeAddress(myIdentity, advertisedAddress)
 
     private val state = ThreadBox(InnerState())
     private val handlers = CopyOnWriteArrayList<Handler>()
@@ -629,7 +626,7 @@ class NodeMessagingClient(override val config: NodeConfiguration,
     // TODO Rethink PartyInfo idea and merging PeerAddress/ServiceAddress (the only difference is that Service address doesn't hold host and port)
     override fun getAddressOfParty(partyInfo: PartyInfo): MessageRecipients {
         return when (partyInfo) {
-            is PartyInfo.SingleNode -> getArtemisPeerAddress(partyInfo.party, partyInfo.addresses.first())
+            is PartyInfo.SingleNode -> NodeAddress(partyInfo.party.owningKey, partyInfo.addresses.first())
             is PartyInfo.DistributedNode -> ServiceAddress(partyInfo.party.owningKey)
         }
     }

@@ -233,7 +233,10 @@ class MockNetwork(defaultParameters: MockNetworkParameters = MockNetworkParamete
             return entropyToKeyPair(counter)
         }
 
-        // It's OK to not have a network map service in the mock network.
+        /**
+         * MockNetwork will ensure nodes are connected to each other. The nodes themselves
+         * won't be able to tell if that happened already or not.
+         */
         override fun checkNetworkMapIsInitialized() = Unit
 
         override fun makeTransactionVerifierService() = InMemoryTransactionVerifierService(1)

@@ -37,10 +37,10 @@ private val wrapperExtract = { x: Annotation ->
 private val singleExtract = { x: Annotation -> listOf(x) }
 
 /**
- * Utility list of all transforms we support that simplifies our generation code
+ * Utility list of all transforms we support that simplifies our generation code.
  *
  * NOTE: We have to support single instances of the transform annotations as well as the wrapping annotation
- * when many instances are repeated
+ * when many instances are repeated.
  */
 val supportedTransforms = listOf(
         SupportedTransform(
